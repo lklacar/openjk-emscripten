@@ -30,6 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #ifdef __EMSCRIPTEN__
 #define APIENTRY
+#include <GL/Regal.h>
 #endif
 
 /*
@@ -197,6 +198,7 @@ static void R_DrawElements( int numIndexes, const glIndex_t *indexes ) {
 		return;
 	}
 
+#ifndef __EMSCRIPTEN__
 	if ( primitives == 1 ) {
 		R_DrawStripElements( numIndexes,  indexes, qglArrayElement );
 		return;
@@ -206,6 +208,9 @@ static void R_DrawElements( int numIndexes, const glIndex_t *indexes ) {
 		R_DrawStripElements( numIndexes,  indexes, R_ArrayElementDiscrete );
 		return;
 	}
+#else
+    R_DrawStripElements( numIndexes,  indexes, R_ArrayElementDiscrete );
+#endif
 
 	// anything else will cause no drawing
 }

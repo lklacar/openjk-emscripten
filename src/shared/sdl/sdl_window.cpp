@@ -615,6 +615,12 @@ static rserr_t GLimp_SetMode(glconfig_t *glConfig, const windowDesc_t *windowDes
 				Com_Printf( "SDL_GL_CreateContext failed: %s\n", SDL_GetError( ) );
 				continue;
 			}
+#ifdef __EMSCRIPTEN__
+            else {
+                SDL_GL_MakeCurrent(screen, opengl_context);
+                RegalMakeCurrent((void *) 1);
+			}
+#endif
 
 			if ( SDL_GL_SetSwapInterval( r_swapInterval->integer ) == -1 )
 			{
