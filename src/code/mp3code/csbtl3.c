@@ -43,11 +43,7 @@ void sbt_mono_L3(float *sample, short *pcm, int ch)
 	for (i = 0; i < 18; i++)
 	{
 		fdct32(sample, pMP3Stream->vbuf + pMP3Stream->vb_ptr);
-#ifndef __EMSCRIPTEN__
-		window(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
-#else
 		window2(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
-#endif
 		sample += 32;
 		pMP3Stream->vb_ptr = (pMP3Stream->vb_ptr - 32) & 511;
 		pcm += 32;
