@@ -1,5 +1,5 @@
 function downloadAsset(pakName) {
-    return fetch('http://localhost:8000/base' + pakName)
+    return fetch('http://localhost:8000/base/' + pakName)
         .then(resp => resp.blob())
         .then(blob => blob.arrayBuffer())
         .then(data => {
