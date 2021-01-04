@@ -137,12 +137,16 @@ bool Sys_RandomBytes( byte *string, int len )
  */
 char *Sys_GetCurrentUser( void )
 {
+#ifdef __EMSCRIPTEN__
+	return "player";
+#else
 	struct passwd *p;
 
 	if ( (p = getpwuid( getuid() )) == NULL ) {
 		return "player";
 	}
 	return p->pw_name;
+#endif
 }
 
 #define MEM_THRESHOLD 96*1024*1024
@@ -520,8 +524,9 @@ void Sys_SetProcessorAffinity( void ) {
 			CPU_SET( i, &set );
 		}
 	}
-
-	sched_setaffinity( 0, sizeof( set ), &set );
+#ifndef __EMSCRIPTEN__
+	sched_setaffinity(0, sizeof( set ), &set );
+#endif
 #elif defined(MACOS_X)
 	//TODO: Apple's APIs for this are weird but exist on a per-thread level. Good enough for us.
 #endif

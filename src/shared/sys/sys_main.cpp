@@ -733,6 +733,36 @@ char *Sys_StripAppBundle( char *dir )
 #	endif
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+void main_loop() {
+        if ( com_busyWait->integer )
+        {
+            bool shouldSleep = false;
+
+#if !defined(_JK2EXE)
+            if ( com_dedicated->integer )
+			{
+				shouldSleep = true;
+			}
+#endif
+
+            if ( com_minimized->integer )
+            {
+                shouldSleep = true;
+            }
+
+            if ( shouldSleep )
+            {
+                Sys_Sleep( 5 );
+            }
+        }
+
+        // run the game
+        Com_Frame();
+}
+#endif
+
 int main ( int argc, char* argv[] )
 {
 	int		i;
@@ -784,6 +814,10 @@ int main ( int argc, char* argv[] )
 	NET_Init();
 
 	// main game loop
+
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 0);
+#else
 	while (1)
 	{
 		if ( com_busyWait->integer )
@@ -811,6 +845,7 @@ int main ( int argc, char* argv[] )
 		// run the game
 		Com_Frame();
 	}
+#endif
 
 	// never gets here
 	return 0;
