@@ -267,38 +267,8 @@ static rank_t TranslateRankName( const char *name )
 	return RANK_CIVILIAN;
 }
 
-saber_colors_t TranslateSaberColor( const char *name )
-{
-	if ( !Q_stricmp( name, "red" ) )
-	{
-		return SABER_RED;
-	}
-	if ( !Q_stricmp( name, "orange" ) )
-	{
-		return SABER_ORANGE;
-	}
-	if ( !Q_stricmp( name, "yellow" ) )
-	{
-		return SABER_YELLOW;
-	}
-	if ( !Q_stricmp( name, "green" ) )
-	{
-		return SABER_GREEN;
-	}
-	if ( !Q_stricmp( name, "blue" ) )
-	{
-		return SABER_BLUE;
-	}
-	if ( !Q_stricmp( name, "purple" ) )
-	{
-		return SABER_PURPLE;
-	}
-	if ( !Q_stricmp( name, "random" ) )
-	{
-		return ((saber_colors_t)(Q_irand( SABER_ORANGE, SABER_PURPLE )));
-	}
-	return SABER_BLUE;
-}
+saber_colors_t TranslateSaberColor( const char *name );
+
 
 /* static int MethodNameToNumber( const char *name ) {
 	if ( !Q_stricmp( name, "EXPONENTIAL" ) ) {

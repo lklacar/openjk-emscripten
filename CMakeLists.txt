@@ -240,7 +240,6 @@ add_executable(
         ./src/shared/sdl/sdl_sound.cpp
         ./src/shared/sdl/sdl_window.cpp
         ./src/shared/sdl/sdl_input.cpp
-        ./src/shared/sys/con_passive.cpp
         ./src/shared/sys/sys_unix.cpp
         ./src/shared/sys/sys_main.cpp
         ./src/shared/sys/con_log.cpp
@@ -507,7 +506,7 @@ add_executable(
         ./src/code/icarus/Sequence.cpp
         ./src/code/icarus/IcarusImplementation.cpp
         ./src/code/icarus/Sequencer.cpp
-)
+        src/globals.cpp src/code/cgame/animtable.cpp)
 
 if (NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
     target_link_libraries(jedi_academy ${SDL2_LIBRARIES} ${JPEG_LIBRARIES} ${OPENGL_LIBRARIES} ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})

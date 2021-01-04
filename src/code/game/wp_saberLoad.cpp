@@ -36,7 +36,7 @@ extern qboolean PM_SaberInAttack( int move );
 extern stringID_table_t FPTable[];
 
 #define MAX_SABER_DATA_SIZE (1024*1024) // 1mb, was 512kb
-char	SaberParms[MAX_SABER_DATA_SIZE];
+extern char	SaberParms[MAX_SABER_DATA_SIZE];
 
 void Saber_SithSwordPrecache( void )
 {//*SIGH* special sounds used by the sith sword

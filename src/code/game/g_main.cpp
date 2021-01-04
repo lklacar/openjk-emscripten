@@ -178,7 +178,7 @@ cvar_t	*g_weaponRespawn;
 cvar_t	*g_subtitles;
 cvar_t	*g_ICARUSDebug;
 
-cvar_t	*com_buildScript;
+extern cvar_t	*com_buildScript;
 
 cvar_t	*g_skippingcin;
 cvar_t	*g_AIsurrender;
@@ -934,40 +934,6 @@ void QDECL G_Error( const char *fmt, ... ) {
 	va_end (argptr);
 
 	gi.Error( ERR_DROP, "%s", text);
-}
-
-/*
--------------------------
-Com_Error
--------------------------
-*/
-
-void Com_Error ( int level, const char *error, ... ) {
-	va_list		argptr;
-	char		text[1024];
-
-	va_start (argptr, error);
-	Q_vsnprintf (text, sizeof(text), error, argptr);
-	va_end (argptr);
-
-	gi.Error( level, "%s", text);
-}
-
-/*
--------------------------
-Com_Printf
--------------------------
-*/
-
-void Com_Printf( const char *msg, ... ) {
-	va_list		argptr;
-	char		text[1024];
-
-	va_start (argptr, msg);
-	Q_vsnprintf (text, sizeof(text), msg, argptr);
-	va_end (argptr);
-
-	gi.Printf ("%s", text);
 }
 
 /*
