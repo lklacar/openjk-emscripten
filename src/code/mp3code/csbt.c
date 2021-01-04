@@ -48,7 +48,12 @@ void fdct8(float *, float *);
 void fdct8_dual(float *, float *);
 void fdct8_dual_mono(float *, float *);
 
+#ifdef __EMSCRIPTEN__
+void window2(float *vbuf, int vb_ptr, short *pcm);
+#else
 void window(float *vbuf, int vb_ptr, short *pcm);
+#endif
+
 void window_dual(float *vbuf, int vb_ptr, short *pcm);
 void window16(float *vbuf, int vb_ptr, short *pcm);
 void window16_dual(float *vbuf, int vb_ptr, short *pcm);
@@ -122,7 +127,11 @@ void sbt_mono(float *sample, short *pcm, int n)
    for (i = 0; i < n; i++)
    {
       fdct32(sample, pMP3Stream->vbuf + pMP3Stream->vb_ptr);
+#ifndef __EMSCRIPTEN__
       window(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#else
+      window2(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#endif
       sample += 64;
       pMP3Stream->vb_ptr = (pMP3Stream->vb_ptr - 32) & 511;
       pcm += 32;
@@ -156,7 +165,12 @@ void sbt_dual_mono(float *sample, short *pcm, int n)
    for (i = 0; i < n; i++)
    {
       fdct32_dual_mono(sample, pMP3Stream->vbuf + pMP3Stream->vb_ptr);
+
+#ifndef __EMSCRIPTEN__
       window(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#else
+      window2(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#endif
       sample += 64;
       pMP3Stream->vb_ptr = (pMP3Stream->vb_ptr - 32) & 511;
       pcm += 32;
@@ -172,7 +186,11 @@ void sbt_dual_left(float *sample, short *pcm, int n)
    for (i = 0; i < n; i++)
    {
       fdct32_dual(sample, pMP3Stream->vbuf + pMP3Stream->vb_ptr);
+#ifndef __EMSCRIPTEN__
       window(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#else
+      window2(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#endif
       sample += 64;
       pMP3Stream->vb_ptr = (pMP3Stream->vb_ptr - 32) & 511;
       pcm += 32;
@@ -188,7 +206,11 @@ void sbt_dual_right(float *sample, short *pcm, int n)
    for (i = 0; i < n; i++)
    {
       fdct32_dual(sample, pMP3Stream->vbuf + pMP3Stream->vb_ptr);
+#ifndef __EMSCRIPTEN__
       window(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#else
+      window2(pMP3Stream->vbuf, pMP3Stream->vb_ptr, pcm);
+#endif
       sample += 64;
       pMP3Stream->vb_ptr = (pMP3Stream->vb_ptr - 32) & 511;
       pcm += 32;
