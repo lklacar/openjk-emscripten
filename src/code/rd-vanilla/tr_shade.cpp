@@ -28,6 +28,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "tr_local.h"
 
+#ifdef __EMSCRIPTEN__
+#define APIENTRY
+#endif
+
 /*
 
   THIS ENTIRE FILE IS BACK END

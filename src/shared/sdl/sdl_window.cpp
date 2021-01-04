@@ -20,11 +20,20 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <SDL.h>
+
+#ifdef __EMSCRIPTEN__
+#include "../../lib/SDL2/include/SDL_video.h"
+#include <GL/Regal.h>
+#include <emscripten.h>
+#endif
+
 #include <SDL_syswm.h>
 #include "qcommon/qcommon.h"
 #include "rd-common/tr_types.h"
 #include "sys/sys_local.h"
 #include "sdl_icon.h"
+
+
 
 enum rserr_t
 {
