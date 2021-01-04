@@ -54,11 +54,10 @@ make -j8
 
 ## Running
 
-After the build, there should be jedi_academy.html, jedi_academy.js and jedi_academy.wasm files. Only those 3 files are
-required in order for engine to work.
+The bin folder contains prebuild binaries. You need to place your assets0.pk3, assets1.pk3, assets2.pk3, assets3.pk3 and default.cfg inside the base folder and serve everything with:
 
-The engine expects the /base game package to be available on localhost:8000.
+```bash
+python3 http.server
+```
 
-You can navigate to /base package and run `python3 -m http.server` to start the content server.
-
-You also need to serve the jedi_academy.html file the same way.
+After that, the game should be available on http://localhost:8000/jedi_academy.html
