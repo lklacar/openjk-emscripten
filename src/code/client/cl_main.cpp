@@ -1079,127 +1079,112 @@ static CMiniHeap *GetG2VertSpaceServer( void ) {
 #define DEFAULT_RENDER_LIBRARY	"rdsp-vanilla"
 #endif
 
+refexport_t*  GetRefAPI ( int apiVersion, refimport_t *refimp );
 void CL_InitRef( void ) {
-	refexport_t	*ret;
-	static refimport_t rit;
-	char		dllName[MAX_OSPATH];
-	GetRefAPI_t	GetRefAPI;
+    refexport_t	*ret;
+    static refimport_t rit;
+    char		dllName[MAX_OSPATH];
+    GetRefAPI_t	GetRefAPI2;
 
-	Com_Printf( "----- Initializing Renderer ----\n" );
-    cl_renderer = Cvar_Get( "cl_renderer", DEFAULT_RENDER_LIBRARY, CVAR_ARCHIVE|CVAR_LATCH|CVAR_PROTECTED );
+    memset( &rit, 0, sizeof( rit ) );
 
-	Com_sprintf( dllName, sizeof( dllName ), "%s_" ARCH_STRING DLL_EXT, cl_renderer->string );
+    GetRefAPI2 = (GetRefAPI_t)GetRefAPI;
 
-	if( !(rendererLib = Sys_LoadDll( dllName, qfalse )) && strcmp( cl_renderer->string, cl_renderer->resetString ) )
-	{
-		Com_Printf( "failed: trying to load fallback renderer\n" );
-		Cvar_ForceReset( "cl_renderer" );
-
-		Com_sprintf( dllName, sizeof( dllName ), DEFAULT_RENDER_LIBRARY "_" ARCH_STRING DLL_EXT );
-		rendererLib = Sys_LoadDll( dllName, qfalse );
-	}
-
-	if ( !rendererLib ) {
-		Com_Error( ERR_FATAL, "Failed to load renderer\n" );
-	}
-
-	memset( &rit, 0, sizeof( rit ) );
-
-	GetRefAPI = (GetRefAPI_t)Sys_LoadFunction( rendererLib, "GetRefAPI" );
-	if ( !GetRefAPI )
-		Com_Error( ERR_FATAL, "Can't load symbol GetRefAPI: '%s'", Sys_LibraryError() );
+    if ( !GetRefAPI2 )
+        Com_Error( ERR_FATAL, "Can't load symbol GetRefAPI2: '%s'", Sys_LibraryError() );
 
 #define RIT(y)	rit.y = y
-	RIT(CIN_PlayCinematic);
-	RIT(CIN_RunCinematic);
-	RIT(CIN_UploadCinematic);
-	RIT(CL_IsRunningInGameCinematic);
-	RIT(Cmd_AddCommand);
-	RIT(Cmd_Argc);
-	RIT(Cmd_ArgsBuffer);
-	RIT(Cmd_Argv);
-	RIT(Cmd_ExecuteString);
-	RIT(Cmd_RemoveCommand);
-	RIT(CM_ClusterPVS);
-	RIT(CM_CullWorldBox);
-	RIT(CM_DeleteCachedMap);
-	RIT(CM_DrawDebugSurface);
-	RIT(CM_PointContents);
-	RIT(Cvar_Get);
-	RIT(Cvar_Set);
-	RIT(Cvar_SetValue);
-	RIT(Cvar_CheckRange);
-	RIT(Cvar_VariableIntegerValue);
-	RIT(Cvar_VariableString);
-	RIT(Cvar_VariableStringBuffer);
-	RIT(Cvar_VariableValue);
-	RIT(FS_FCloseFile);
-	RIT(FS_FileIsInPAK);
-	RIT(FS_FOpenFileByMode);
-	RIT(FS_FOpenFileRead);
-	RIT(FS_FOpenFileWrite);
-	RIT(FS_FreeFile);
-	RIT(FS_FreeFileList);
-	RIT(FS_ListFiles);
-	RIT(FS_Read);
-	RIT(FS_ReadFile);
-	RIT(FS_Write);
-	RIT(FS_WriteFile);
-	RIT(Hunk_ClearToMark);
-	RIT(SND_RegisterAudio_LevelLoadEnd);
-	//RIT(SV_PointContents);
-	RIT(SV_Trace);
-	RIT(S_RestartMusic);
-	RIT(Z_Free);
-	rit.Malloc=CL_Malloc;
-	RIT(Z_MemSize);
-	RIT(Z_MorphMallocTag);
+    RIT(CIN_PlayCinematic);
+    RIT(CIN_RunCinematic);
+    RIT(CIN_UploadCinematic);
+    RIT(CL_IsRunningInGameCinematic);
+    RIT(Cmd_AddCommand);
+    RIT(Cmd_Argc);
+    RIT(Cmd_ArgsBuffer);
+    RIT(Cmd_Argv);
+    RIT(Cmd_ExecuteString);
+    RIT(Cmd_RemoveCommand);
+    RIT(CM_ClusterPVS);
+    RIT(CM_CullWorldBox);
+    RIT(CM_DeleteCachedMap);
+    RIT(CM_DrawDebugSurface);
+    RIT(CM_PointContents);
+    RIT(Cvar_Get);
+    RIT(Cvar_Set);
+    RIT(Cvar_SetValue);
+    RIT(Cvar_CheckRange);
+    RIT(Cvar_VariableIntegerValue);
+    RIT(Cvar_VariableString);
+    RIT(Cvar_VariableStringBuffer);
+    RIT(Cvar_VariableValue);
+    RIT(FS_FCloseFile);
+    RIT(FS_FileIsInPAK);
+    RIT(FS_FOpenFileByMode);
+    RIT(FS_FOpenFileRead);
+    RIT(FS_FOpenFileWrite);
+    RIT(FS_FreeFile);
+    RIT(FS_FreeFileList);
+    RIT(FS_ListFiles);
+    RIT(FS_Read);
+    RIT(FS_ReadFile);
+    RIT(FS_Write);
+    RIT(FS_WriteFile);
+    RIT(Hunk_ClearToMark);
+    RIT(SND_RegisterAudio_LevelLoadEnd);
+    //RIT(SV_PointContents);
+    RIT(SV_Trace);
+    RIT(S_RestartMusic);
+    RIT(Z_Free);
+    rit.Malloc=CL_Malloc;
+    RIT(Z_MemSize);
+    RIT(Z_MorphMallocTag);
 
-	RIT(Hunk_ClearToMark);
+    RIT(Hunk_ClearToMark);
 
     rit.WIN_Init = WIN_Init;
-	rit.WIN_SetGamma = WIN_SetGamma;
+    rit.WIN_SetGamma = WIN_SetGamma;
     rit.WIN_Shutdown = WIN_Shutdown;
     rit.WIN_Present = WIN_Present;
-	rit.GL_GetProcAddress = WIN_GL_GetProcAddress;
-	rit.GL_ExtensionSupported = WIN_GL_ExtensionSupported;
+    rit.GL_GetProcAddress = WIN_GL_GetProcAddress;
+    rit.GL_ExtensionSupported = WIN_GL_ExtensionSupported;
 
-	rit.PD_Load = PD_Load;
-	rit.PD_Store = PD_Store;
+    rit.PD_Load = PD_Load;
+    rit.PD_Store = PD_Store;
 
-	rit.Error = Com_Error;
-	rit.FS_FileExists = S_FileExists;
-	rit.GetG2VertSpaceServer = GetG2VertSpaceServer;
-	rit.LowPhysicalMemory = Sys_LowPhysicalMemory;
-	rit.Milliseconds = Sys_Milliseconds2;
-	rit.Printf = CL_RefPrintf;
-	rit.SE_GetString = String_GetStringValue;
+    rit.Error = Com_Error;
+    rit.FS_FileExists = S_FileExists;
+    rit.GetG2VertSpaceServer = GetG2VertSpaceServer;
+    rit.LowPhysicalMemory = Sys_LowPhysicalMemory;
+    rit.Milliseconds = Sys_Milliseconds2;
+    rit.Printf = CL_RefPrintf;
+    rit.SE_GetString = String_GetStringValue;
 
-	rit.SV_Trace = SV_Trace;
+    rit.SV_Trace = SV_Trace;
 
-	rit.gpvCachedMapDiskImage = get_gpvCachedMapDiskImage;
-	rit.gsCachedMapDiskImage = get_gsCachedMapDiskImage;
-	rit.gbUsingCachedMapDataRightNow = get_gbUsingCachedMapDataRightNow;
-	rit.gbAlreadyDoingLoad = get_gbAlreadyDoingLoad;
-	rit.com_frameTime = get_com_frameTime;
+    rit.gpvCachedMapDiskImage = get_gpvCachedMapDiskImage;
+    rit.gsCachedMapDiskImage = get_gsCachedMapDiskImage;
+    rit.gbUsingCachedMapDataRightNow = get_gbUsingCachedMapDataRightNow;
+    rit.gbAlreadyDoingLoad = get_gbAlreadyDoingLoad;
+    rit.com_frameTime = get_com_frameTime;
 
-	rit.SV_PointContents = SV_PointContents;
+    rit.SV_PointContents = SV_PointContents;
 
-	rit.saved_game = &ojk::SavedGame::get_instance();
+    rit.saved_game = &ojk::SavedGame::get_instance();
 
-	ret = GetRefAPI( REF_API_VERSION, &rit );
+    ret = GetRefAPI2(REF_API_VERSION, &rit );
 
-	if ( !ret ) {
-		Com_Error (ERR_FATAL, "Couldn't initialize refresh" );
-	}
+    if ( !ret ) {
+        Com_Error (ERR_FATAL, "Couldn't initialize refresh" );
+    }
 
-	re = *ret;
+    re = *ret;
 
-	Com_Printf( "-------------------------------\n");
+    Com_Printf( "-------------------------------\n");
 
-	// unpause so the cgame definately gets a snapshot and renders a frame
-	Cvar_Set( "cl_paused", "0" );
+    // unpause so the cgame definately gets a snapshot and renders a frame
+    Cvar_Set( "cl_paused", "0" );
 }
+
 
 
 //===========================================================================================
