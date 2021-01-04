@@ -71,7 +71,7 @@ VIRTUAL MACHINE
 ==============================================================
 */
 typedef struct vm_s {
-	intptr_t	(*entryPoint)( int callNum, ... );
+    intptr_t	(*entryPoint)( int callNum, intptr_t a1, intptr_t a2, intptr_t a3, intptr_t a4, intptr_t a5, intptr_t a6, intptr_t a7, intptr_t a8, intptr_t a9, intptr_t a10 );
 } vm_t;
 
 extern vm_t cgvm;

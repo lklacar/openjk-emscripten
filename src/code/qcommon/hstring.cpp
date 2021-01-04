@@ -490,16 +490,6 @@ void hstring::Init(const char *str)
 
 }
 
-const char *hstring::c_str(void) const
-{
-	if(!mId)
-	{
-		return("");
-	}
-	assert(mId>0&&mId<ThePool().mNextStringId);
-	return(gCharPtrs[mId]);
-}
-
 std::string hstring::str(void) const
 {
 	if(!mId)

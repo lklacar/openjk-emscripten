@@ -58,29 +58,32 @@ extern qboolean R_inPVS( vec3_t p1, vec3_t p2 );
 
 void UI_SetActiveMenu( const char* menuname,const char *menuID );
 
+void dllEntry( intptr_t ( *syscallptr)( intptr_t arg, ... ) );
+intptr_t vmMain(int command, intptr_t arg0, intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t arg5, intptr_t arg6, intptr_t arg7,
+                intptr_t i1, intptr_t i2);
 qboolean CL_InitCGameVM( void *gameLibrary )
 {
-	typedef intptr_t SyscallProc( intptr_t, ... );
-	typedef void DllEntryProc( SyscallProc * );
+    typedef intptr_t SyscallProc( intptr_t, ... );
+    typedef void DllEntryProc( SyscallProc * );
 
-	DllEntryProc *dllEntry = (DllEntryProc *)Sys_LoadFunction( gameLibrary, "dllEntry" );
-	cgvm.entryPoint = (intptr_t (*)(int,...))Sys_LoadFunction( gameLibrary, "vmMain" );
+    DllEntryProc *dllEntry2 = dllEntry;
+    cgvm.entryPoint = vmMain;
 
-	if ( !cgvm.entryPoint || !dllEntry ) {
+    if ( !cgvm.entryPoint || !dllEntry2 ) {
 #ifdef JK2_MODE
-		const char *gamename = "jospgame";
+        const char *gamename = "jospgame";
 #else
-		const char *gamename = "jagame";
+        const char *gamename = "jagame";
 #endif
 
-		Com_Printf( "CL_InitCGameVM: client game entry point not found in %s" ARCH_STRING DLL_EXT ": %s\n",
-					gamename, Sys_LibraryError() );
-		return qfalse;
-	}
+        Com_Printf( "CL_InitCGameVM: client game entry point not found in %s" ARCH_STRING DLL_EXT ": %s\n",
+                    gamename, Sys_LibraryError() );
+        return qfalse;
+    }
 
-	dllEntry( VM_DllSyscall );
+    dllEntry2( VM_DllSyscall );
 
-	return qtrue;
+    return qtrue;
 }
 
 /*

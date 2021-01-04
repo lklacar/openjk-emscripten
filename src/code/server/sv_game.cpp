@@ -885,212 +885,198 @@ SV_InitGameProgs
 Init the game subsystem for a new map
 ===============
 */
+game_export_t* GetGameAPI( game_import_t *import );
 void SV_InitGameProgs (void) {
-	game_import_t	import;
-	int				i;
+    game_import_t	import;
+    int				i;
 
-	// unload anything we have now
-	if ( ge ) {
-		SV_ShutdownGameProgs (qtrue);
-	}
+    // unload anything we have now
+    if ( ge ) {
+        SV_ShutdownGameProgs (qtrue);
+    }
 
-	// load a new game dll
-	import.Printf = Com_Printf;
-	import.WriteCam = Com_WriteCam;
-	import.FlushCamFile = Com_FlushCamFile;
-	import.Error = Com_Error;
+    // load a new game dll
+    import.Printf = Com_Printf;
+    import.WriteCam = Com_WriteCam;
+    import.FlushCamFile = Com_FlushCamFile;
+    import.Error = Com_Error;
 
-	import.Milliseconds = Sys_Milliseconds2;
+    import.Milliseconds = Sys_Milliseconds2;
 
-	import.DropClient = SV_GameDropClient;
+    import.DropClient = SV_GameDropClient;
 
-	import.SendServerCommand = SV_GameSendServerCommand;
+    import.SendServerCommand = SV_GameSendServerCommand;
 
 
-	import.linkentity = SV_LinkEntity;
-	import.unlinkentity = SV_UnlinkEntity;
-	import.EntitiesInBox = SV_AreaEntities;
-	import.EntityContact = SV_EntityContact;
-	import.trace = SV_Trace;
-	import.pointcontents = SV_PointContents;
-	import.totalMapContents = CM_TotalMapContents;
-	import.SetBrushModel = SV_SetBrushModel;
+    import.linkentity = SV_LinkEntity;
+    import.unlinkentity = SV_UnlinkEntity;
+    import.EntitiesInBox = SV_AreaEntities;
+    import.EntityContact = SV_EntityContact;
+    import.trace = SV_Trace;
+    import.pointcontents = SV_PointContents;
+    import.totalMapContents = CM_TotalMapContents;
+    import.SetBrushModel = SV_SetBrushModel;
 
-	import.inPVS = SV_inPVS;
-	import.inPVSIgnorePortals = SV_inPVSIgnorePortals;
+    import.inPVS = SV_inPVS;
+    import.inPVSIgnorePortals = SV_inPVSIgnorePortals;
 
-	import.SetConfigstring = SV_SetConfigstring;
-	import.GetConfigstring = SV_GetConfigstring;
+    import.SetConfigstring = SV_SetConfigstring;
+    import.GetConfigstring = SV_GetConfigstring;
 
-	import.SetUserinfo = SV_SetUserinfo;
-	import.GetUserinfo = SV_GetUserinfo;
+    import.SetUserinfo = SV_SetUserinfo;
+    import.GetUserinfo = SV_GetUserinfo;
 
-	import.GetServerinfo = SV_GetServerinfo;
+    import.GetServerinfo = SV_GetServerinfo;
 
-	import.cvar = Cvar_Get;
-	import.cvar_set = Cvar_Set;
-	import.Cvar_VariableIntegerValue = Cvar_VariableIntegerValue;
-	import.Cvar_VariableStringBuffer = Cvar_VariableStringBuffer;
+    import.cvar = Cvar_Get;
+    import.cvar_set = Cvar_Set;
+    import.Cvar_VariableIntegerValue = Cvar_VariableIntegerValue;
+    import.Cvar_VariableStringBuffer = Cvar_VariableStringBuffer;
 
-	import.argc = Cmd_Argc;
-	import.argv = Cmd_Argv;
-	import.SendConsoleCommand = Cbuf_AddText;
+    import.argc = Cmd_Argc;
+    import.argv = Cmd_Argv;
+    import.SendConsoleCommand = Cbuf_AddText;
 
-	import.FS_FOpenFile = FS_FOpenFileByMode;
-	import.FS_Read = FS_Read;
-	import.FS_Write = FS_Write;
-	import.FS_FCloseFile = FS_FCloseFile;
-	import.FS_ReadFile = FS_ReadFile;
-	import.FS_FreeFile = FS_FreeFile;
-	import.FS_GetFileList = FS_GetFileList;
+    import.FS_FOpenFile = FS_FOpenFileByMode;
+    import.FS_Read = FS_Read;
+    import.FS_Write = FS_Write;
+    import.FS_FCloseFile = FS_FCloseFile;
+    import.FS_ReadFile = FS_ReadFile;
+    import.FS_FreeFile = FS_FreeFile;
+    import.FS_GetFileList = FS_GetFileList;
 
-	import.saved_game = &ojk::SavedGame::get_instance();
+    import.saved_game = &ojk::SavedGame::get_instance();
 
-	import.AdjustAreaPortalState = SV_AdjustAreaPortalState;
-	import.AreasConnected = CM_AreasConnected;
+    import.AdjustAreaPortalState = SV_AdjustAreaPortalState;
+    import.AreasConnected = CM_AreasConnected;
 
-	import.VoiceVolume = s_entityWavVol;
+    import.VoiceVolume = s_entityWavVol;
 
-	import.Malloc = G_ZMalloc_Helper;
-	import.Free = Z_Free;
-	import.bIsFromZone = Z_IsFromZone;
+    import.Malloc = G_ZMalloc_Helper;
+    import.Free = Z_Free;
+    import.bIsFromZone = Z_IsFromZone;
 
-	import.G2API_AddBolt = SV_G2API_AddBolt;
-	import.G2API_AttachEnt = SV_G2API_AttachEnt;
-	import.G2API_AttachG2Model = SV_G2API_AttachG2Model;
-	import.G2API_CollisionDetect = SV_G2API_CollisionDetect;
-	import.G2API_DetachEnt = SV_G2API_DetachEnt;
-	import.G2API_DetachG2Model = SV_G2API_DetachG2Model;
-	import.G2API_GetAnimFileName = SV_G2API_GetAnimFileName;
-	import.G2API_GetBoltMatrix = SV_G2API_GetBoltMatrix;
-	import.G2API_GetBoneAnim = SV_G2API_GetBoneAnim;
-	import.G2API_GetBoneAnimIndex = SV_G2API_GetBoneAnimIndex;
-	import.G2API_AddSurface = SV_G2API_AddSurface;
-	import.G2API_HaveWeGhoul2Models = SV_G2API_HaveWeGhoul2Models;
-	import.G2API_InitGhoul2Model = SV_G2API_InitGhoul2Model;
-	import.G2API_SetBoneAngles = SV_G2API_SetBoneAngles;
-	import.G2API_SetBoneAnglesMatrix = SV_G2API_SetBoneAnglesMatrix;
-	import.G2API_SetBoneAnim = SV_G2API_SetBoneAnim;
-	import.G2API_SetSkin = SV_G2API_SetSkin;
-	import.G2API_CopyGhoul2Instance = SV_G2API_CopyGhoul2Instance;
-	import.G2API_SetBoneAnglesIndex = SV_G2API_SetBoneAnglesIndex;
-	import.G2API_SetBoneAnimIndex = SV_G2API_SetBoneAnimIndex;
-	import.G2API_IsPaused = SV_G2API_IsPaused;
-	import.G2API_ListBones = SV_G2API_ListBones;
-	import.G2API_ListSurfaces = SV_G2API_ListSurfaces;
-	import.G2API_PauseBoneAnim = SV_G2API_PauseBoneAnim;
-	import.G2API_PauseBoneAnimIndex = SV_G2API_PauseBoneAnimIndex;
-	import.G2API_PrecacheGhoul2Model = SV_G2API_PrecacheGhoul2Model;
-	import.G2API_RemoveBolt = SV_G2API_RemoveBolt;
-	import.G2API_RemoveBone = SV_G2API_RemoveBone;
-	import.G2API_RemoveGhoul2Model = SV_G2API_RemoveGhoul2Model;
-	import.G2API_SetLodBias = SV_G2API_SetLodBias;
-	import.G2API_SetRootSurface = SV_G2API_SetRootSurface;
-	import.G2API_SetShader = SV_G2API_SetShader;
-	import.G2API_SetSurfaceOnOff = SV_G2API_SetSurfaceOnOff;
-	import.G2API_StopBoneAngles = SV_G2API_StopBoneAngles;
-	import.G2API_StopBoneAnim = SV_G2API_StopBoneAnim;
-	import.G2API_SetGhoul2ModelFlags = SV_G2API_SetGhoul2ModelFlags;
-	import.G2API_AddBoltSurfNum = SV_G2API_AddBoltSurfNum;
-	import.G2API_RemoveSurface = SV_G2API_RemoveSurface;
-	import.G2API_GetAnimRange = SV_G2API_GetAnimRange;
-	import.G2API_GetAnimRangeIndex = SV_G2API_GetAnimRangeIndex;
-	import.G2API_GiveMeVectorFromMatrix = SV_G2API_GiveMeVectorFromMatrix;
-	import.G2API_GetGhoul2ModelFlags = SV_G2API_GetGhoul2ModelFlags;
-	import.G2API_CleanGhoul2Models = SV_G2API_CleanGhoul2Models;
-	import.TheGhoul2InfoArray = SV_TheGhoul2InfoArray;
-	import.G2API_GetParentSurface = SV_G2API_GetParentSurface;
-	import.G2API_GetSurfaceIndex = SV_G2API_GetSurfaceIndex;
-	import.G2API_GetSurfaceName = SV_G2API_GetSurfaceName;
-	import.G2API_GetGLAName = SV_G2API_GetGLAName;
-	import.G2API_SetNewOrigin = SV_G2API_SetNewOrigin;
-	import.G2API_GetBoneIndex = SV_G2API_GetBoneIndex;
-	import.G2API_StopBoneAnglesIndex = SV_G2API_StopBoneAnglesIndex;
-	import.G2API_StopBoneAnimIndex = SV_G2API_StopBoneAnimIndex;
-	import.G2API_SetBoneAnglesMatrixIndex = SV_G2API_SetBoneAnglesMatrixIndex;
-	import.G2API_SetAnimIndex = SV_G2API_SetAnimIndex;
-	import.G2API_GetAnimIndex = SV_G2API_GetAnimIndex;
+    import.G2API_AddBolt = SV_G2API_AddBolt;
+    import.G2API_AttachEnt = SV_G2API_AttachEnt;
+    import.G2API_AttachG2Model = SV_G2API_AttachG2Model;
+    import.G2API_CollisionDetect = SV_G2API_CollisionDetect;
+    import.G2API_DetachEnt = SV_G2API_DetachEnt;
+    import.G2API_DetachG2Model = SV_G2API_DetachG2Model;
+    import.G2API_GetAnimFileName = SV_G2API_GetAnimFileName;
+    import.G2API_GetBoltMatrix = SV_G2API_GetBoltMatrix;
+    import.G2API_GetBoneAnim = SV_G2API_GetBoneAnim;
+    import.G2API_GetBoneAnimIndex = SV_G2API_GetBoneAnimIndex;
+    import.G2API_AddSurface = SV_G2API_AddSurface;
+    import.G2API_HaveWeGhoul2Models = SV_G2API_HaveWeGhoul2Models;
+    import.G2API_InitGhoul2Model = SV_G2API_InitGhoul2Model;
+    import.G2API_SetBoneAngles = SV_G2API_SetBoneAngles;
+    import.G2API_SetBoneAnglesMatrix = SV_G2API_SetBoneAnglesMatrix;
+    import.G2API_SetBoneAnim = SV_G2API_SetBoneAnim;
+    import.G2API_SetSkin = SV_G2API_SetSkin;
+    import.G2API_CopyGhoul2Instance = SV_G2API_CopyGhoul2Instance;
+    import.G2API_SetBoneAnglesIndex = SV_G2API_SetBoneAnglesIndex;
+    import.G2API_SetBoneAnimIndex = SV_G2API_SetBoneAnimIndex;
+    import.G2API_IsPaused = SV_G2API_IsPaused;
+    import.G2API_ListBones = SV_G2API_ListBones;
+    import.G2API_ListSurfaces = SV_G2API_ListSurfaces;
+    import.G2API_PauseBoneAnim = SV_G2API_PauseBoneAnim;
+    import.G2API_PauseBoneAnimIndex = SV_G2API_PauseBoneAnimIndex;
+    import.G2API_PrecacheGhoul2Model = SV_G2API_PrecacheGhoul2Model;
+    import.G2API_RemoveBolt = SV_G2API_RemoveBolt;
+    import.G2API_RemoveBone = SV_G2API_RemoveBone;
+    import.G2API_RemoveGhoul2Model = SV_G2API_RemoveGhoul2Model;
+    import.G2API_SetLodBias = SV_G2API_SetLodBias;
+    import.G2API_SetRootSurface = SV_G2API_SetRootSurface;
+    import.G2API_SetShader = SV_G2API_SetShader;
+    import.G2API_SetSurfaceOnOff = SV_G2API_SetSurfaceOnOff;
+    import.G2API_StopBoneAngles = SV_G2API_StopBoneAngles;
+    import.G2API_StopBoneAnim = SV_G2API_StopBoneAnim;
+    import.G2API_SetGhoul2ModelFlags = SV_G2API_SetGhoul2ModelFlags;
+    import.G2API_AddBoltSurfNum = SV_G2API_AddBoltSurfNum;
+    import.G2API_RemoveSurface = SV_G2API_RemoveSurface;
+    import.G2API_GetAnimRange = SV_G2API_GetAnimRange;
+    import.G2API_GetAnimRangeIndex = SV_G2API_GetAnimRangeIndex;
+    import.G2API_GiveMeVectorFromMatrix = SV_G2API_GiveMeVectorFromMatrix;
+    import.G2API_GetGhoul2ModelFlags = SV_G2API_GetGhoul2ModelFlags;
+    import.G2API_CleanGhoul2Models = SV_G2API_CleanGhoul2Models;
+    import.TheGhoul2InfoArray = SV_TheGhoul2InfoArray;
+    import.G2API_GetParentSurface = SV_G2API_GetParentSurface;
+    import.G2API_GetSurfaceIndex = SV_G2API_GetSurfaceIndex;
+    import.G2API_GetSurfaceName = SV_G2API_GetSurfaceName;
+    import.G2API_GetGLAName = SV_G2API_GetGLAName;
+    import.G2API_SetNewOrigin = SV_G2API_SetNewOrigin;
+    import.G2API_GetBoneIndex = SV_G2API_GetBoneIndex;
+    import.G2API_StopBoneAnglesIndex = SV_G2API_StopBoneAnglesIndex;
+    import.G2API_StopBoneAnimIndex = SV_G2API_StopBoneAnimIndex;
+    import.G2API_SetBoneAnglesMatrixIndex = SV_G2API_SetBoneAnglesMatrixIndex;
+    import.G2API_SetAnimIndex = SV_G2API_SetAnimIndex;
+    import.G2API_GetAnimIndex = SV_G2API_GetAnimIndex;
 
-	import.G2API_SaveGhoul2Models = SV_G2API_SaveGhoul2Models;
-	import.G2API_LoadGhoul2Models = SV_G2API_LoadGhoul2Models;
-	import.G2API_LoadSaveCodeDestructGhoul2Info = SV_G2API_LoadSaveCodeDestructGhoul2Info;
-	import.G2API_GetAnimFileNameIndex = SV_G2API_GetAnimFileNameIndex;
-	import.G2API_GetAnimFileInternalNameIndex = SV_G2API_GetAnimFileInternalNameIndex;
-	import.G2API_GetSurfaceRenderStatus = SV_G2API_GetSurfaceRenderStatus;
+    import.G2API_SaveGhoul2Models = SV_G2API_SaveGhoul2Models;
+    import.G2API_LoadGhoul2Models = SV_G2API_LoadGhoul2Models;
+    import.G2API_LoadSaveCodeDestructGhoul2Info = SV_G2API_LoadSaveCodeDestructGhoul2Info;
+    import.G2API_GetAnimFileNameIndex = SV_G2API_GetAnimFileNameIndex;
+    import.G2API_GetAnimFileInternalNameIndex = SV_G2API_GetAnimFileInternalNameIndex;
+    import.G2API_GetSurfaceRenderStatus = SV_G2API_GetSurfaceRenderStatus;
 
-	import.G2API_SetRagDoll = SV_G2API_SetRagDoll;
-	import.G2API_AnimateG2Models = SV_G2API_AnimateG2Models;
+    import.G2API_SetRagDoll = SV_G2API_SetRagDoll;
+    import.G2API_AnimateG2Models = SV_G2API_AnimateG2Models;
 
-	import.G2API_RagPCJConstraint = SV_G2API_RagPCJConstraint;
-	import.G2API_RagPCJGradientSpeed = SV_G2API_RagPCJGradientSpeed;
-	import.G2API_RagEffectorGoal = SV_G2API_RagEffectorGoal;
-	import.G2API_GetRagBonePos = SV_G2API_GetRagBonePos;
-	import.G2API_RagEffectorKick = SV_G2API_RagEffectorKick;
-	import.G2API_RagForceSolve = SV_G2API_RagForceSolve;
+    import.G2API_RagPCJConstraint = SV_G2API_RagPCJConstraint;
+    import.G2API_RagPCJGradientSpeed = SV_G2API_RagPCJGradientSpeed;
+    import.G2API_RagEffectorGoal = SV_G2API_RagEffectorGoal;
+    import.G2API_GetRagBonePos = SV_G2API_GetRagBonePos;
+    import.G2API_RagEffectorKick = SV_G2API_RagEffectorKick;
+    import.G2API_RagForceSolve = SV_G2API_RagForceSolve;
 
-	import.G2API_SetBoneIKState = SV_G2API_SetBoneIKState;
+    import.G2API_SetBoneIKState = SV_G2API_SetBoneIKState;
     import.G2API_IKMove = SV_G2API_IKMove;
 
-	import.G2API_AddSkinGore = SV_G2API_AddSkinGore;
-	import.G2API_ClearSkinGore = SV_G2API_ClearSkinGore;
+    import.G2API_AddSkinGore = SV_G2API_AddSkinGore;
+    import.G2API_ClearSkinGore = SV_G2API_ClearSkinGore;
 
-	import.SetActiveSubBSP = SV_SetActiveSubBSP;
+    import.SetActiveSubBSP = SV_SetActiveSubBSP;
 
-	import.RE_RegisterSkin = SV_RE_RegisterSkin;
-	import.RE_GetAnimationCFG = SV_RE_GetAnimationCFG;
+    import.RE_RegisterSkin = SV_RE_RegisterSkin;
+    import.RE_GetAnimationCFG = SV_RE_GetAnimationCFG;
 
-	import.WE_GetWindVector	= SV_WE_GetWindVector;
-	import.WE_GetWindGusting = SV_WE_GetWindGusting;
-	import.WE_IsOutside	= SV_WE_IsOutside;
-	import.WE_IsOutsideCausingPain	= SV_WE_IsOutsideCausingPain;
-	import.WE_GetChanceOfSaberFizz = SV_WE_GetChanceOfSaberFizz;
-	import.WE_IsShaking = SV_WE_IsShaking;
-	import.WE_AddWeatherZone = SV_WE_AddWeatherZone;
-	import.WE_SetTempGlobalFogColor = SV_WE_SetTempGlobalFogColor;
+    import.WE_GetWindVector	= SV_WE_GetWindVector;
+    import.WE_GetWindGusting = SV_WE_GetWindGusting;
+    import.WE_IsOutside	= SV_WE_IsOutside;
+    import.WE_IsOutsideCausingPain	= SV_WE_IsOutsideCausingPain;
+    import.WE_GetChanceOfSaberFizz = SV_WE_GetChanceOfSaberFizz;
+    import.WE_IsShaking = SV_WE_IsShaking;
+    import.WE_AddWeatherZone = SV_WE_AddWeatherZone;
+    import.WE_SetTempGlobalFogColor = SV_WE_SetTempGlobalFogColor;
 
 #ifdef JK2_MODE
-	const char *gamename = "jospgame";
+    const char *gamename = "jospgame";
 #else
-	const char *gamename = "jagame";
+    const char *gamename = "jagame";
 #endif
 
-	GetGameAPIProc *GetGameAPI;
-	gameLibrary = Sys_LoadSPGameDll( gamename, &GetGameAPI );
-	if ( !gameLibrary )
-		Com_Error( ERR_DROP, "Failed to load %s library", gamename );
 
-	ge = (game_export_t *)GetGameAPI( &import );
-	if (!ge)
-	{
-		Sys_UnloadDll( gameLibrary );
-		Com_Error( ERR_DROP, "Failed to load %s library", gamename );
-	}
+    ge = (game_export_t *)GetGameAPI( &import );
 
-	if (ge->apiversion != GAME_API_VERSION)
-	{
-		int apiVersion = ge->apiversion;
-		Sys_UnloadDll( gameLibrary );
-		Com_Error (ERR_DROP, "game is version %i, not %i", apiVersion, GAME_API_VERSION);
-	}
 
-	//hook up the client while we're here
-	if ( !CL_InitCGameVM( gameLibrary ) )
-	{
-		Sys_UnloadDll( gameLibrary );
-		Com_Error ( ERR_DROP, "Failed to load client game functions" );
-	}
 
-	sv.entityParsePoint = CM_EntityString();
+    //hook up the client while we're here
+    if ( !CL_InitCGameVM( gameLibrary ) )
+    {
+        Com_Error ( ERR_DROP, "Failed to load client game functions" );
+    }
 
-	// use the current msec count for a random seed
-	Z_TagFree(TAG_G_ALLOC);
-	ge->Init( sv_mapname->string, sv_spawntarget->string, sv_mapChecksum->integer, CM_EntityString(), sv.time, com_frameTime, Com_Milliseconds(), eSavedGameJustLoaded, qbLoadTransition );
+    sv.entityParsePoint = CM_EntityString();
 
-	// clear all gentity pointers that might still be set from
-	// a previous level
-	for ( i = 0 ; i < 1 ; i++ ) {
-		svs.clients[i].gentity = NULL;
-	}
+    // use the current msec count for a random seed
+    Z_TagFree(TAG_G_ALLOC);
+    ge->Init( sv_mapname->string, sv_spawntarget->string, sv_mapChecksum->integer, CM_EntityString(), sv.time, com_frameTime, Com_Milliseconds(), eSavedGameJustLoaded, qbLoadTransition );
+
+    // clear all gentity pointers that might still be set from
+    // a previous level
+    for ( i = 0 ; i < 1 ; i++ ) {
+        svs.clients[i].gentity = NULL;
+    }
 }
 
 

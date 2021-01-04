@@ -68,8 +68,8 @@ typedef	ratl::hash_pool<BLOCK_SIZE, MAX_HASH>		TStrPool;
 
 static TStrPool& Pool()
 {
-	static TStrPool TSP;
-	return TSP;
+    static TStrPool TSP;
+    return TSP;
 }
 
 
@@ -79,9 +79,9 @@ static TStrPool& Pool()
 ////////////////////////////////////////////////////////////////////////////////////////
 hstring::hstring()
 {
-	mHandle	= 0;
+    mHandle	= 0;
 #ifdef _DEBUG
-	mStr	= 0;
+    mStr	= 0;
 #endif
 }
 
@@ -90,7 +90,7 @@ hstring::hstring()
 ////////////////////////////////////////////////////////////////////////////////////////
 hstring::hstring(const char *str)
 {
-	init(str);
+    init(str);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -98,10 +98,10 @@ hstring::hstring(const char *str)
 ////////////////////////////////////////////////////////////////////////////////////////
 hstring::hstring(const hstring &str)
 {
-	mHandle = str.mHandle;
+    mHandle = str.mHandle;
 
 #ifdef _DEBUG
-	mStr	= str.mStr;
+    mStr	= str.mStr;
 #endif
 }
 
@@ -111,8 +111,8 @@ hstring::hstring(const hstring &str)
 ////////////////////////////////////////////////////////////////////////////////////////
 hstring& hstring::operator= (const char *str)
 {
-	init(str);
-	return *this;
+    init(str);
+    return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -120,12 +120,21 @@ hstring& hstring::operator= (const char *str)
 ////////////////////////////////////////////////////////////////////////////////////////
 hstring& hstring::operator= (const hstring &str)
 {
-	mHandle = str.mHandle;
+    mHandle = str.mHandle;
 
 #ifdef _DEBUG
-	mStr	= str.mStr;
+    mStr	= str.mStr;
 #endif
-	return *this;
+    return *this;
+}
+
+const char*	hstring::c_str(void) const
+{
+    if (!mHandle)
+    {
+        return("");
+    }
+    return ((const char*)Pool()[mHandle]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +142,7 @@ hstring& hstring::operator= (const hstring &str)
 ////////////////////////////////////////////////////////////////////////////////////////
 const char*	hstring::operator *(void) const
 {
-	return c_str();
+    return c_str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -141,7 +150,7 @@ const char*	hstring::operator *(void) const
 ////////////////////////////////////////////////////////////////////////////////////
 int			hstring::length() const
 {
-	return strlen(c_str());
+    return strlen(c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +158,7 @@ int			hstring::length() const
 ////////////////////////////////////////////////////////////////////////////////////
 int			hstring::handle() const
 {
-	return mHandle;
+    return mHandle;
 }
 
 
@@ -159,17 +168,17 @@ int			hstring::handle() const
 ////////////////////////////////////////////////////////////////////////////////////
 void		hstring::init(const char *str)
 {
-	if (!str)
-	{
-		mHandle = 0;
-	}
-	else
-	{
-		mHandle = Pool().get_handle(str, strlen(str)+1);		// +1 for null character
-	}
-	#ifdef _DEBUG
-	mStr	= (char*)Pool()[mHandle];
-	#endif
+    if (!str)
+    {
+        mHandle = 0;
+    }
+    else
+    {
+        mHandle = Pool().get_handle(str, strlen(str)+1);		// +1 for null character
+    }
+#ifdef _DEBUG
+    mStr	= (char*)Pool()[mHandle];
+#endif
 }
 
 
