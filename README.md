@@ -57,7 +57,7 @@ make -j8
 The bin folder contains prebuild binaries. You need to place your assets0.pk3, assets1.pk3, assets2.pk3, assets3.pk3 and default.cfg inside the base folder and serve everything with:
 
 ```bash
-python3 http.server
+python3 -m http.server
 ```
 
 After that, the game should be available on http://localhost:8000/jedi_academy.html
