@@ -1,5 +1,9 @@
 # OpenJK Emscripten Port
 
+## Demo
+
+Playable demo levels: https://jk.qubit.rs
+
 ## Description
 
 This is an emscripten port of [OpenJK](https://github.com/JACoders/OpenJK) engine used in [Star Wars: Jedi Academy](https://www.youtube.com/watch?v=S8JsJOVaZ58) and
