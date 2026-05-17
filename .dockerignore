@@ -1,0 +1,5 @@
+*
+!Dockerfile
+!nginx.conf
+!bin/
+!bin/**
